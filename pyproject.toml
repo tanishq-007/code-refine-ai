@@ -1,0 +1,23 @@
+[project]
+name = "code-debt-collector"
+version = "0.1.0"
+description = "Agentic LLM system that scans a codebase, detects technical debt, prioritizes it by impact/effort, proposes fixes as unified diffs, and emits a Markdown refactoring roadmap."
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=1.0.0",
+    "mcp>=1.0.0",
+    "radon>=6.0.0",
+    "python-dotenv>=1.0.0",
+    "ruff>=0.5.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0.0"]
+web = ["fastapi>=0.110.0", "uvicorn[standard]>=0.29.0", "python-multipart>=0.0.9"]
+
+[tool.setuptools]
+packages = ["analyzers", "rag", "mcp_server", "agent", "eval", "server"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

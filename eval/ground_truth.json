@@ -1,0 +1,33 @@
+{
+  "dead_code": [
+    {"file": "src/orders.py", "symbol": "legacy_discount_calc"}
+  ],
+  "long_function": [
+    {"file": "src/orders.py", "symbol": "process_order"}
+  ],
+  "high_complexity": [
+    {"file": "src/orders.py", "symbol": "process_order"}
+  ],
+  "duplication": [
+    {"file": "src/orders.py", "symbol": "legacy_discount_calc"},
+    {"file": "src/pricing.py", "symbol": "tier_discount"}
+  ],
+  "missing_tests": [
+    {"file": "src/orders.py", "symbol": "apply_shipping_rules"}
+  ],
+  "long_parameter_list": [
+    {"file": "src/reporting.py", "symbol": "build_report"}
+  ],
+  "missing_docstring": [
+    {"file": "src/reporting.py", "symbol": "parse_config"}
+  ],
+  "unused_import": [
+    {"file": "src/reporting_utils.py", "symbol": "os"}
+  ],
+  "unused_variable": [
+    {"file": "src/reporting_utils.py", "symbol": "unused_local"}
+  ],
+  "magic_number": [
+    {"file": "src/rate_limiter.py", "symbol": ""}
+  ]
+}

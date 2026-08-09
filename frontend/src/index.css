@@ -1,0 +1,184 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Design tokens — reference dataviz palette, light + dark             */
+/* ------------------------------------------------------------------ */
+
+:root {
+  color-scheme: light;
+  --surface-1: #fcfcfb;      /* chart/card surface */
+  --page: #f9f9f7;           /* page plane */
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.10);
+
+  --series-1: #2a78d6;       /* blue   */
+  --series-2: #eb6834;       /* orange */
+  --series-3: #1baf7a;       /* aqua   */
+  --series-4: #eda100;       /* yellow */
+  --series-5: #e87ba4;       /* magenta */
+
+  --seq-150: #b7d3f6;
+  --seq-250: #86b6ef;
+  --seq-400: #3987e5;
+  --seq-550: #1c5cab;
+
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+  --delta-good-text: #006300;
+
+  --diff-add-bg: rgba(12, 163, 12, 0.10);
+  --diff-del-bg: rgba(208, 59, 59, 0.10);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-1: #1a1a19;
+  --page: #0d0d0d;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --grid: #2c2c2a;
+  --baseline: #383835;
+  --border: rgba(255, 255, 255, 0.10);
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+
+  --seq-150: #104281;
+  --seq-250: #184f95;
+  --seq-400: #2a78d6;
+  --seq-550: #6da7ec;
+
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+  --delta-good-text: #0ca30c;
+
+  --diff-add-bg: rgba(12, 163, 12, 0.14);
+  --diff-del-bg: rgba(230, 103, 103, 0.14);
+}
+
+@theme inline {
+  --color-surface: var(--surface-1);
+  --color-page: var(--page);
+  --color-ink: var(--text-primary);
+  --color-ink-2: var(--text-secondary);
+  --color-ink-3: var(--text-muted);
+  --color-grid: var(--grid);
+  --color-baseline: var(--baseline);
+  --color-edge: var(--border);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
+  --color-series-3: var(--series-3);
+  --color-good: var(--status-good);
+  --color-warning: var(--status-warning);
+  --color-serious: var(--status-serious);
+  --color-critical: var(--status-critical);
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
+html, body {
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-feature-settings: "cv11", "ss01"; /* Inter's open digits/alt glyphs */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display type wears tight negative tracking; body stays neutral. */
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Function-only accent focus ring (keyboard nav), never on plain hover. */
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--series-1) 55%, transparent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Tactile press feedback on anything clickable. */
+button:active,
+a:active {
+  transform: scale(0.98);
+}
+button, a {
+  transition: transform 120ms ease, background-color 160ms ease,
+              border-color 160ms ease, color 160ms ease, opacity 160ms ease;
+}
+
+/* Cards lift on hover via border + surface, not shadows. */
+.card-hover {
+  transition: border-color 180ms ease, background-color 180ms ease,
+              transform 180ms ease;
+}
+.card-hover:hover {
+  border-color: var(--baseline);
+  transform: translateY(-1px);
+}
+
+/* Ultra-subtle hero backdrop: one radial accent wash + a dot grid that
+   fades out; decoration budget spent on exactly one element. */
+.hero-backdrop {
+  position: relative;
+}
+.hero-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: -10% -5% auto -5%;
+  height: 130%;
+  pointer-events: none;
+  background:
+    radial-gradient(600px 320px at 22% 18%,
+      color-mix(in srgb, var(--series-1) 9%, transparent), transparent 70%);
+}
+.hero-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(var(--baseline) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.35;
+  mask-image: radial-gradient(520px 300px at 30% 20%, black, transparent 75%);
+}
+.hero-backdrop > * {
+  position: relative;
+}
+
+/* Gradient ink for one hero phrase — surgical, not a visual language. */
+.gradient-ink {
+  background: linear-gradient(100deg, var(--series-1), color-mix(in srgb, var(--series-1) 55%, var(--text-primary)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Section entrance: small rise + fade, disabled for reduced motion. */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.rise-in { animation: rise-in 460ms ease both; }
+.rise-in-late { animation: rise-in 460ms 120ms ease both; }
+@media (prefers-reduced-motion: reduce) {
+  .rise-in, .rise-in-late { animation: none; }
+  button:active, a:active { transform: none; }
+  .card-hover:hover { transform: none; }
+}
+
+/* recessive scrollbars for log panes */
+.log-pane::-webkit-scrollbar { width: 8px; height: 8px; }
+.log-pane::-webkit-scrollbar-thumb { background: var(--baseline); border-radius: 4px; }
+.log-pane::-webkit-scrollbar-track { background: transparent; }

@@ -1,0 +1,19 @@
+.env
+__pycache__/
+*.pyc
+*.egg-info/
+
+.venv/
+
+# repos added via the web UI (clone-from-URL / folder upload)
+.code_debt_workspace/
+
+# .code_debt/ is entirely generated output (findings, scores, roadmap, fixes,
+# the review log, the fix sandbox) -- regenerate by running the tool, never
+# check it in.
+**/.code_debt/
+
+# CLI output written to the repo root by default (main.py scan/score/run)
+/findings.json
+/scored.json
+/roadmap.md
