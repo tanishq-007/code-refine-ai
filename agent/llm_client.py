@@ -105,6 +105,8 @@ def request_json_response(raw_out: Optional[List[str]] = None, **kwargs) -> Dict
         )
     except TypeError:
         response = create_chat_completion(**kwargs)
+    except RateLimitExhausted:
+        raise  # a 429 won't clear by retrying without response_format -- surface it
     except Exception:
         response = create_chat_completion(**kwargs)
 

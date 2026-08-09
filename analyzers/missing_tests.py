@@ -43,7 +43,6 @@ def _find_test_file(repo_root: str, rel_path: str) -> str | None:
         os.path.join(dirname, f"test_{base}.py"),
         os.path.join(dirname, f"{base}_test.py"),
         os.path.join("tests", f"test_{base}.py"),
-        os.path.join(repo_root, "tests", f"test_{base}.py"),
     ]
     for c in candidates:
         full = c if os.path.isabs(c) else os.path.join(repo_root, c)
