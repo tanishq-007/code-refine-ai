@@ -118,8 +118,7 @@ def search_codebase(repo_root: str, pattern: str, max_results: int = 50) -> List
     regex = re.compile(pattern)
     results = []
     for dirpath, dirnames, filenames in os.walk(repo_root):
-        dirnames[:] = [d for d in dirnames if d not in
-                        {".git", "node_modules", "__pycache__", ".venv", "venv"} and not d.startswith(".")]
+        dirnames[:] = [d for d in dirnames if d not in IGNORE_DIRS and not d.startswith(".")]
         for fn in filenames:
             if not fn.endswith((".py", ".js", ".jsx", ".ts", ".tsx")):
                 continue
