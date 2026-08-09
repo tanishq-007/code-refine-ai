@@ -31,7 +31,7 @@ def analyze(file_path: str, source: str) -> List[Finding]:
     except SyntaxError:
         return findings
 
-    if _missing(tree):
+    if tree.body and _missing(tree):
         findings.append(Finding(
             type="missing_docstring",
             file=file_path,
