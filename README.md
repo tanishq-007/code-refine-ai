@@ -1,4 +1,4 @@
-# Code Debt Collector
+# CODE-REFINE-AI
 
 An agentic LLM system that scans a codebase, detects technical debt (long
 functions, duplication, high complexity, missing tests, dead code, long
