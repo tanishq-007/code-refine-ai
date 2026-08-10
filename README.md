@@ -109,25 +109,25 @@ up in the repo list ready to scan.
 
 ## Build order / status
 
-- ✅ **Phase 1** `analyzers/` — `scan` produces real findings (complexity,
+-  **Phase 1** `analyzers/` — `scan` produces real findings (complexity,
   long function, missing tests, dead code, long parameter lists, missing
   docstrings, magic numbers; duplication uses `jscpd` if present, else an
   AST-clone fallback for Python with lower recall; unused-import/-variable
   needs `ruff`, churn needs `git`). Degrades gracefully when external tools
   are absent.
-- ✅ **Phase 2** `agent/scoring.py` — impact/effort scoring via structured
+-  **Phase 2** `agent/scoring.py` — impact/effort scoring via structured
   outputs, reasoning over the deterministic signals. (`python main.py score`)
-- ✅ **Phase 3** `rag/` — a local, dependency-free TF-IDF retrieval index
+- **Phase 3** `rag/` — a local, dependency-free TF-IDF retrieval index
   (`rag/index.py`) over the coding-standards corpus (`rag/standards.py`);
   `get_standards` feeds both the scorer and the fix-generation specialists,
   `enrich_fan_in` adds a real (separate, plain-text) fan-in signal. No
   external API, no key, always on; `score --no-rag` only skips the fan-in
   pass, not standards retrieval.
-- ✅ **Phase 4** `mcp_server/` — local MCP server exposing 6 tools. Logic
+-  **Phase 4** `mcp_server/` — local MCP server exposing 6 tools. Logic
   lives in `mcp_server/tools.py` (no `mcp` dep, testable); `server.py` is
   the stdio binding, runnable standalone or spawned by `run --transport mcp`.
   File access is confined to the repo root (path-traversal guard).
-- ✅ **Phase 5** — agentic loop + fixes + eval:
+-  **Phase 5** — agentic loop + fixes + eval:
   - `agent/orchestrator.py` — an LLM (Mistral's hosted models by default, via
     `agent/llm_client.py`) drives the 6 tools via a tool-use loop, over
     either transport (`--transport in-process`, the default, or
