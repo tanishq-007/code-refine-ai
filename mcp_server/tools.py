@@ -12,11 +12,23 @@ from __future__ import annotations
 import os
 import re
 import shutil
+import stat
 import subprocess
 from typing import List, Dict
 
 from analyzers.base import Finding, IGNORE_DIRS, read_findings
 from rag import retrieval
+
+
+def _rmtree_onerror(func, path, exc_info):
+    """shutil.rmtree fails with PermissionError/WinError 5 on Windows when a
+    file/dir is read-only -- copytree preserves that bit from the source
+    tree (common for files synced via OneDrive), so a sandbox rebuilt more
+    than once hits this on every rebuild after the first. Clear the bit and
+    retry the same operation before giving up. Mirrors agent/fixgen.py's
+    copy of the same helper (see _sandbox_root's docstring on the layering)."""
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 
 class PathTraversalError(Exception):
@@ -60,7 +72,7 @@ def _sandbox_root(repo_root: str) -> str:
     repo_root = os.path.abspath(repo_root)
     sandbox = os.path.join(repo_root, ".code_debt", "sandbox")
     if os.path.exists(sandbox):
-        shutil.rmtree(sandbox)
+        shutil.rmtree(sandbox, onerror=_rmtree_onerror)
     # Skip the same dirs the analyzers do (IGNORE_DIRS) plus anything
     # dot-prefixed -- without the ".*" catch-all this drags in .claude/
     # worktrees, .venv/, and .env itself (copying live API keys into a

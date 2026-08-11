@@ -173,6 +173,7 @@ def resolve_finding(repo_root: str, findings_path: str, sf: ScoredFinding,
                     max_tokens=2000,
                     messages=messages,
                     tools=tools,
+                    temperature=0,
                 )
                 break
             except llm_client.RateLimitExhausted:
@@ -501,6 +502,7 @@ async def _resolve_finding_mcp(session, repo_root: str, sf: ScoredFinding, laten
                     max_tokens=2000,
                     messages=messages,
                     tools=tools,
+                    temperature=0,
                 )
                 break
             except llm_client.RateLimitExhausted:

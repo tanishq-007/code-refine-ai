@@ -31,6 +31,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import subprocess
 import tempfile
 from typing import Dict, List, Optional
@@ -38,6 +39,16 @@ from typing import Dict, List, Optional
 from analyzers.base import Finding, IGNORE_DIRS
 from agent import llm_client
 from rag import fix_examples
+
+
+def _rmtree_onerror(func, path, exc_info):
+    """shutil.rmtree fails with PermissionError/WinError 5 on Windows when a
+    file/dir is read-only -- copytree preserves that bit from the source
+    tree (common for files synced via OneDrive), so a sandbox rebuilt more
+    than once hits this on every rebuild after the first. Clear the bit and
+    retry the same operation before giving up."""
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 SYSTEM_PROMPT = """You are refactoring a specific piece of technical debt in a codebase.
 You will be given a Finding (type, file, line range, description, metrics) and the current
@@ -151,6 +162,7 @@ def propose_fix(finding: Finding, snippet: str, repo_root: str) -> Dict:
                 model=llm_client.FIX_MODEL,
                 max_tokens=1500,
                 messages=messages,
+                temperature=0,
                 raw_out=raw_out,
             )
             edits = parsed["edits"]
@@ -237,7 +249,7 @@ def _fresh_sandbox(repo_root: str) -> str:
     carries over a previous attempt's half-applied patch."""
     sandbox = os.path.join(repo_root, ".code_debt", "sandbox")
     if os.path.exists(sandbox):
-        shutil.rmtree(sandbox)
+        shutil.rmtree(sandbox, onerror=_rmtree_onerror)
     shutil.copytree(repo_root, sandbox, ignore=_SANDBOX_IGNORE)
     return sandbox
 

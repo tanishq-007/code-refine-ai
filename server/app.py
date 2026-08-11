@@ -20,10 +20,13 @@ import threading
 import time
 from typing import Dict, List, Optional
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+
+load_dotenv()
 
 from agent import fixgen
 from analyzers.base import IGNORE_DIRS
